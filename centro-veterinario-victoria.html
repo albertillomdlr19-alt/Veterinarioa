@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Centro Veterinario Victoria · Sevilla</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500&family=Public+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --cream:#FBF6EE;
+    --paper:#FFFFFF;
+    --ink:#1E2B27;
+    --ink-soft:#4B5B55;
+    --teal:#2C5F58;
+    --teal-dark:#1B3E39;
+    --ochre:#E2A33D;
+    --ochre-soft:#F5DFB5;
+    --brick:#B8483C;
+    --line:#E1D6C0;
+    --radius:18px;
+    --maxw:1140px;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--cream);
+    color:var(--ink);
+    font-family:'Public Sans',sans-serif;
+    -webkit-font-smoothing:antialiased;
+    line-height:1.55;
+  }
+  h1,h2,h3{
+    font-family:'Fraunces',serif;
+    font-weight:600;
+    margin:0 0 .4em;
+    color:var(--teal-dark);
+    letter-spacing:-0.01em;
+  }
+  a{color:inherit;}
+  button{appearance:none;-webkit-appearance:none;border:none;background:none;margin:0;padding:0;font:inherit;color:inherit;cursor:pointer;text-align:inherit;}
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 24px;}
+  .mono{font-family:'IBM Plex Mono',monospace;letter-spacing:.02em;}
+  .eyebrow{
+    font-family:'IBM Plex Mono',monospace;
+    text-transform:uppercase;
+    letter-spacing:.14em;
+    font-size:.72rem;
+    color:var(--brick);
+    font-weight:500;
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+  }
+  .eyebrow::before{content:"";width:18px;height:1px;background:var(--brick);display:inline-block;}
+
+  /* ---------- Header ---------- */
+  header{
+    position:sticky;top:0;z-index:40;
+    background:rgba(251,246,238,.9);
+    backdrop-filter:blur(8px);
+    border-bottom:1px solid var(--line);
+  }
+  .nav{display:flex;align-items:center;justify-content:space-between;padding:16px 24px;gap:16px;}
+  .brand{display:flex;align-items:center;gap:12px;text-decoration:none;}
+  .brand-mark{width:42px;height:42px;flex-shrink:0;}
+  .brand-name{font-family:'Fraunces',serif;font-weight:600;font-size:1.08rem;color:var(--teal-dark);line-height:1.15;}
+  .brand-name span{display:block;font-family:'IBM Plex Mono',monospace;font-weight:400;font-size:.62rem;letter-spacing:.1em;color:var(--ink-soft);text-transform:uppercase;margin-top:2px;}
+  .nav-actions{display:flex;align-items:center;gap:14px;}
+  .call-pill{
+    display:flex;align-items:center;gap:8px;
+    font-family:'IBM Plex Mono',monospace;font-size:.85rem;
+    color:var(--teal-dark);text-decoration:none;font-weight:500;
+  }
+  .btn{
+    display:inline-flex;align-items:center;justify-content:center;gap:8px;
+    padding:11px 22px;border-radius:999px;
+    font-weight:600;font-size:.92rem;text-decoration:none;
+    border:1.5px solid transparent;cursor:pointer;
+    transition:transform .15s ease, box-shadow .15s ease, background .15s ease;
+    font-family:'Public Sans',sans-serif;
+  }
+  .btn:active{transform:scale(.97);}
+  .btn-primary{background:var(--brick);color:#fff;box-shadow:0 4px 14px rgba(184,72,60,.28);}
+  .btn-primary:hover{background:#a13d32;}
+  .btn-outline{background:transparent;border-color:var(--teal-dark);color:var(--teal-dark);}
+  .btn-outline:hover{background:var(--teal-dark);color:#fff;}
+  .btn-block{width:100%;}
+  .section-tabs{border-top:1px solid var(--line);background:var(--paper);}
+  .tabs-inner{
+    display:flex;gap:2px;overflow-x:auto;
+    -ms-overflow-style:none;scrollbar-width:none;
+  }
+  .tabs-inner::-webkit-scrollbar{display:none;}
+  .tab{
+    display:flex;align-items:center;gap:8px;
+    padding:13px 18px;white-space:nowrap;
+    font-size:.85rem;font-weight:600;text-decoration:none;
+    color:var(--ink-soft);border-bottom:2.5px solid transparent;
+    transition:color .2s ease, border-color .2s ease, background .2s ease;
+  }
+  .tab-num{font-family:'IBM Plex Mono',monospace;font-weight:400;font-size:.7rem;color:var(--ochre);}
+  .tab:hover{color:var(--teal-dark);background:var(--cream);}
+  .tab.active{color:var(--teal-dark);border-bottom-color:var(--brick);}
+  .tab.active .tab-num{color:var(--brick);}
+
+  /* ---------- Sistema de páginas (una sección visible a la vez) ---------- */
+  .page{display:none;}
+  .page.active-page{display:block;animation:pageIn .45s ease;}
+  @keyframes pageIn{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:translateY(0);}}
+  @media (prefers-reduced-motion:reduce){
+    .page.active-page{animation:none;}
+  }
+
+  /* ---------- Tile divider (azulejo motif) ---------- */
+  .tile-divider{height:14px;width:100%;
+    background-image:repeating-linear-gradient(45deg, var(--teal) 0 8px, var(--ochre) 8px 16px);
+    opacity:.9;
+  }
+  .tile-divider.thin{height:8px;}
+
+  /* ---------- Hero ---------- */
+  .hero{padding:76px 0 60px;position:relative;overflow:hidden;}
+  .hero-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:56px;align-items:center;}
+  @media (max-width:900px){ .hero-grid{grid-template-columns:1fr;gap:40px;} }
+  .hero h1{font-size:clamp(2.3rem,4.6vw,3.4rem);line-height:1.06;}
+  .hero h1 em{font-style:italic;color:var(--brick);font-weight:500;}
+  .hero p.lead{font-size:1.08rem;color:var(--ink-soft);max-width:46ch;margin-bottom:28px;}
+  .hero-ctas{display:flex;flex-wrap:wrap;gap:14px;margin-bottom:34px;}
+  .status-row{display:flex;flex-wrap:wrap;align-items:center;gap:18px;font-size:.88rem;color:var(--ink-soft);}
+  .status-dot{width:8px;height:8px;border-radius:50%;background:#3C8A5B;display:inline-block;margin-right:6px;box-shadow:0 0 0 4px rgba(60,138,91,.18);}
+
+  /* stamp badge */
+  .stamp-wrap{display:flex;flex-direction:column;align-items:center;position:relative;}
+  .stamp{
+    width:260px;height:260px;border-radius:50%;
+    border:2.5px dashed var(--teal);
+    display:flex;align-items:center;justify-content:center;
+    position:relative;
+    transform:rotate(-6deg);
+    background:var(--paper);
+  }
+  .stamp-inner{
+    width:216px;height:216px;border-radius:50%;
+    border:1.5px solid var(--teal);
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
+    text-align:center;gap:4px;color:var(--teal-dark);
+  }
+  .stamp-inner .rating-num{font-family:'Fraunces',serif;font-size:2.6rem;font-weight:700;line-height:1;}
+  .stamp-inner .stars{color:var(--ochre);font-size:1.05rem;letter-spacing:2px;}
+  .stamp-inner .rating-sub{font-family:'IBM Plex Mono',monospace;font-size:.68rem;text-transform:uppercase;letter-spacing:.1em;color:var(--ink-soft);}
+  .stamp-badge{
+    position:absolute;bottom:6px;right:6px;
+    background:var(--brick);color:#fff;
+    font-family:'IBM Plex Mono',monospace;font-size:.62rem;letter-spacing:.06em;
+    padding:8px 12px;border-radius:999px;transform:rotate(6deg);
+    box-shadow:0 6px 16px rgba(0,0,0,.15);
+  }
+
+  /* ---------- Sections generic ---------- */
+  section{padding:74px 0;}
+  .section-head{max-width:640px;margin-bottom:44px;}
+  .section-head h2{font-size:clamp(1.7rem,3vw,2.2rem);}
+  .section-head p{color:var(--ink-soft);font-size:1.02rem;}
+
+  /* ---------- Servicios ---------- */
+  .servicios{background:var(--paper);}
+  .serv-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;}
+  @media (max-width:860px){ .serv-grid{grid-template-columns:repeat(2,1fr);} }
+  @media (max-width:560px){ .serv-grid{grid-template-columns:1fr;} }
+  .serv-card{
+    border:1px solid var(--line);border-radius:var(--radius);
+    padding:26px 24px;background:var(--cream);
+    transition:transform .2s ease, box-shadow .2s ease, border-color .2s ease;
+  }
+  .serv-card:hover{transform:translateY(-4px);box-shadow:0 14px 30px rgba(30,43,39,.08);border-color:var(--teal);}
+  .serv-icon{width:40px;height:40px;margin-bottom:16px;color:var(--teal);}
+  .serv-card h3{font-size:1.08rem;margin-bottom:8px;}
+  .serv-card p{font-size:.9rem;color:var(--ink-soft);margin:0;}
+
+  /* ---------- Equipo ---------- */
+  .equipo-grid{display:grid;grid-template-columns:1fr 1fr;gap:26px;}
+  @media (max-width:700px){ .equipo-grid{grid-template-columns:1fr;} }
+  .persona{
+    display:flex;gap:18px;align-items:flex-start;
+    background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);padding:24px;
+  }
+  .avatar{
+    width:58px;height:58px;border-radius:50%;flex-shrink:0;
+    background:var(--teal);color:#fff;
+    display:flex;align-items:center;justify-content:center;
+    font-family:'Fraunces',serif;font-weight:600;font-size:1.3rem;
+  }
+  .persona h3{font-size:1.02rem;margin-bottom:2px;}
+  .persona .rol{font-family:'IBM Plex Mono',monospace;font-size:.68rem;text-transform:uppercase;letter-spacing:.08em;color:var(--brick);margin-bottom:8px;display:block;}
+  .persona p{margin:0;font-size:.9rem;color:var(--ink-soft);}
+
+  /* ---------- Reseñas ---------- */
+  .resenas{background:var(--paper);}
+  .res-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;}
+  @media (max-width:900px){ .res-grid{grid-template-columns:1fr;} }
+  .res-card{
+    position:relative;
+    background:var(--cream);border:1px solid var(--line);border-radius:var(--radius);
+    padding:26px 24px 22px;
+  }
+  .res-card .quote-mark{font-family:'Fraunces',serif;font-size:2.6rem;color:var(--ochre);line-height:0;position:relative;top:18px;}
+  .res-card p.quote{font-size:.98rem;color:var(--ink);margin:6px 0 18px;}
+  .res-foot{display:flex;align-items:center;gap:10px;}
+  .res-avatar{width:34px;height:34px;border-radius:50%;background:var(--teal-dark);color:#fff;display:flex;align-items:center;justify-content:center;font-family:'Fraunces',serif;font-size:.9rem;font-weight:600;flex-shrink:0;}
+  .res-name{font-size:.85rem;font-weight:600;}
+  .res-tag{font-family:'IBM Plex Mono',monospace;font-size:.66rem;color:var(--ink-soft);text-transform:uppercase;letter-spacing:.05em;}
+  .stars-sm{color:var(--ochre);font-size:.8rem;letter-spacing:1px;}
+
+  /* ---------- Horario / contacto ---------- */
+  .contacto{}
+  .cont-grid{display:grid;grid-template-columns:1fr 1fr;gap:0;border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;background:var(--paper);}
+  @media (max-width:800px){ .cont-grid{grid-template-columns:1fr;} }
+  .cont-info{padding:38px;}
+  .cont-info h2{font-size:1.5rem;}
+  .info-row{display:flex;gap:14px;padding:16px 0;border-bottom:1px solid var(--line);}
+  .info-row:last-of-type{border-bottom:none;}
+  .info-row .ico{width:22px;height:22px;color:var(--teal);flex-shrink:0;margin-top:2px;}
+  .info-row .label{font-family:'IBM Plex Mono',monospace;font-size:.66rem;text-transform:uppercase;letter-spacing:.08em;color:var(--ink-soft);margin-bottom:3px;}
+  .info-row .val{font-size:.96rem;font-weight:500;}
+  .info-row a{text-decoration:none;color:var(--teal-dark);}
+  .info-row a:hover{text-decoration:underline;}
+  .map-embed{min-height:340px;width:100%;border:0;filter:saturate(.85);}
+  .cont-cta{margin-top:26px;display:flex;gap:12px;flex-wrap:wrap;}
+
+  /* ---------- Footer ---------- */
+  footer{background:var(--teal-dark);color:#F1EAD9;padding:46px 0 30px;margin-top:0;}
+  .foot-grid{display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:24px;}
+  footer .brand-name{color:#F1EAD9;}
+  footer .brand-name span{color:#B7C9C3;}
+  .foot-note{font-family:'IBM Plex Mono',monospace;font-size:.72rem;color:#9DB3AC;margin-top:26px;}
+
+  /* ---------- Modal de reseñas ---------- */
+  .reviews-modal{position:fixed;inset:0;z-index:100;display:none;}
+  .reviews-modal.open{display:block;}
+  .reviews-overlay{position:absolute;inset:0;background:rgba(30,43,39,.55);backdrop-filter:blur(2px);
+    opacity:0;transition:opacity .25s ease;}
+  .reviews-modal.open .reviews-overlay{opacity:1;}
+  .reviews-panel{
+    position:absolute;top:0;right:0;height:100%;width:min(540px,94vw);
+    background:var(--cream);box-shadow:-16px 0 40px rgba(0,0,0,.18);
+    display:flex;flex-direction:column;
+    transform:translateX(100%);transition:transform .3s ease;
+  }
+  .reviews-modal.open .reviews-panel{transform:translateX(0);}
+  .reviews-panel-head{display:flex;justify-content:space-between;align-items:flex-start;
+    padding:26px 26px 18px;border-bottom:1px solid var(--line);flex-shrink:0;}
+  .modal-close{background:var(--paper);border:1px solid var(--line);border-radius:50%;
+    width:36px;height:36px;font-size:1rem;cursor:pointer;color:var(--ink);flex-shrink:0;}
+  .modal-close:hover{background:var(--teal);color:#fff;border-color:var(--teal);}
+  .review-filters{display:flex;gap:8px;padding:14px 26px;border-bottom:1px solid var(--line);flex-shrink:0;background:var(--paper);}
+  .rfilter{
+    font-family:'Public Sans',sans-serif;font-size:.82rem;font-weight:600;
+    padding:8px 14px;border-radius:999px;border:1.5px solid var(--line);
+    background:var(--cream);color:var(--ink-soft);cursor:pointer;
+    display:flex;align-items:center;gap:6px;transition:all .15s ease;
+  }
+  .rfilter span{font-family:'IBM Plex Mono',monospace;font-size:.72rem;opacity:.75;}
+  .rfilter:hover{border-color:var(--teal);color:var(--teal-dark);}
+  .rfilter.active{background:var(--teal-dark);border-color:var(--teal-dark);color:#fff;}
+  .rfilter.active span{opacity:.85;}
+  .reviews-panel-body{overflow-y:auto;padding:22px 26px;display:flex;flex-direction:column;gap:16px;flex:1;}
+  .reviews-panel-body .res-card{padding:20px;}
+  .reviews-panel-body .res-card.is-hidden{display:none;}
+  .res-meta{font-family:'IBM Plex Mono',monospace;font-size:.66rem;color:var(--ink-soft);text-transform:uppercase;letter-spacing:.04em;}
+  .reviews-panel-foot{padding:16px 26px 24px;border-top:1px solid var(--line);flex-shrink:0;
+    display:flex;flex-direction:column;gap:6px;background:var(--paper);}
+  @media (max-width:560px){ .reviews-panel{width:100%;} }
+
+  /* reveal animation */
+  .reveal{opacity:0;transform:translateY(18px);transition:opacity .6s ease, transform .6s ease;}
+  .reveal.in{opacity:1;transform:translateY(0);}
+  @media (prefers-reduced-motion:reduce){
+    .reveal{opacity:1;transform:none;transition:none;}
+    html{scroll-behavior:auto;}
+  }
+  :focus-visible{outline:2.5px solid var(--brick);outline-offset:2px;}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="nav wrap">
+    <a href="#top" class="brand">
+      <svg class="brand-mark" viewBox="0 0 42 42" fill="none">
+        <circle cx="21" cy="21" r="20" stroke="#2C5F58" stroke-width="1.5" stroke-dasharray="3 3"/>
+        <path d="M21 27c-4 0-7-2.2-7-5.4 0-2.6 2.6-3.6 3.6-5.6.7-1.4 1.4-3 3.4-3s2.7 1.6 3.4 3c1 2 3.6 3 3.6 5.6 0 3.2-3 5.4-7 5.4Z" fill="#E2A33D"/>
+        <circle cx="14.5" cy="12" r="1.7" fill="#2C5F58"/>
+        <circle cx="19" cy="9.5" r="1.7" fill="#2C5F58"/>
+        <circle cx="23.5" cy="9.5" r="1.7" fill="#2C5F58"/>
+        <circle cx="28" cy="12" r="1.7" fill="#2C5F58"/>
+      </svg>
+      <span class="brand-name">Centro Veterinario Victoria<span>Sevilla · Giralda Sur</span></span>
+    </a>
+    <div class="nav-actions">
+      <a class="call-pill" href="tel:+34954240228">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.12.9.34 1.79.65 2.65a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.43-1.43a2 2 0 0 1 2.11-.45c.86.31 1.75.53 2.65.65A2 2 0 0 1 22 16.92z"/></svg>
+        954 24 02 28
+      </a>
+      <button type="button" class="btn btn-primary" data-tab="contacto">Pedir cita</button>
+    </div>
+  </div>
+
+  <nav class="section-tabs">
+    <div class="wrap tabs-inner">
+      <button type="button" class="tab active" data-tab="inicio"><span class="tab-num">01</span>Inicio</button>
+      <button type="button" class="tab" data-tab="servicios"><span class="tab-num">02</span>Servicios</button>
+      <button type="button" class="tab" data-tab="equipo"><span class="tab-num">03</span>Equipo</button>
+      <button type="button" class="tab" data-tab="resenas"><span class="tab-num">04</span>Reseñas</button>
+      <button type="button" class="tab" data-tab="contacto"><span class="tab-num">05</span>Horario y ubicación</button>
+    </div>
+  </nav>
+</header>
+
+<div class="tile-divider"></div>
+
+<main id="top">
+
+  <!-- HERO -->
+  <section class="hero page active-page" id="inicio">
+    <div class="wrap hero-grid">
+      <div>
+        <span class="eyebrow">Veterinario en Sevilla</span>
+        <h1>Cuidado cercano para <em>quien no puede pedirlo</em> con palabras.</h1>
+        <p class="lead">Consultas, vacunación, cirugía y diagnóstico por imagen para perros y gatos, en Giralda Sur. Trato profesional, precios claros y un equipo que conoce a tu mascota por su nombre.</p>
+        <div class="hero-ctas">
+          <a class="btn btn-primary" href="tel:+34954240228">Llamar y pedir cita</a>
+          <a class="btn btn-outline" href="https://www.google.com/maps?q=Edif.+Giralda+Sur,+C.+Poeta+Manuel+Ben%C3%ADtez+Carrasco+1,+41013+Sevilla" target="_blank" rel="noopener">Cómo llegar</a>
+        </div>
+        <div class="status-row">
+          <span><span class="status-dot"></span>Cierra hoy a las 13:30 · vuelve a abrir a las 18:00</span>
+          <span class="mono">929J+76 Sevilla</span>
+        </div>
+      </div>
+      <div class="stamp-wrap reveal">
+        <div class="stamp">
+          <div class="stamp-inner">
+            <div class="rating-num">4,5</div>
+            <div class="stars">★★★★★</div>
+            <div class="rating-sub">214 reseñas en Google</div>
+          </div>
+          <div class="stamp-badge">Clínica de confianza</div>
+        </div>
+        <a href="#" onclick="openReviews(event)" class="btn btn-outline" style="margin-top:16px;">Ver reseñas →</a>
+      </div>
+    </div>
+  </section>
+
+  <div class="tile-divider thin"></div>
+
+  <!-- SERVICIOS -->
+  <section class="servicios page" id="servicios">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <span class="eyebrow">Qué hacemos</span>
+        <h2>Todo lo esencial, sin vueltas.</h2>
+        <p>Los servicios que más piden los sevillanos que ya confían en nosotros, contados sin jerga.</p>
+      </div>
+      <div class="serv-grid">
+        <div class="serv-card reveal">
+          <svg class="serv-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 2v6M9 5l3 3 3-3M4 14a8 8 0 0 0 16 0"/><path d="M4 14c0-1.5.6-2.9 1.6-3.9M20 14c0-1.5-.6-2.9-1.6-3.9"/></svg>
+          <h3>Consultas y vacunación</h3>
+          <p>Revisiones rutinarias y calendarios de vacunas, con citas puntuales que no te hacen esperar.</p>
+        </div>
+        <div class="serv-card reveal">
+          <svg class="serv-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="M8 12h8M12 8v8"/></svg>
+          <h3>Cirugía y esterilización</h3>
+          <p>Castraciones y esterilizaciones, incluidos casos con complicaciones anatómicas, con seguimiento cercano.</p>
+        </div>
+        <div class="serv-card reveal">
+          <svg class="serv-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+          <h3>Ecografía y diagnóstico</h3>
+          <p>Pruebas de imagen para ver qué pasa por dentro antes de decidir cualquier tratamiento.</p>
+        </div>
+        <div class="serv-card reveal">
+          <svg class="serv-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 21s-7-4.5-9.3-9A5.5 5.5 0 0112 6.5 5.5 5.5 0 0121.3 12c-2.3 4.5-9.3 9-9.3 9z"/></svg>
+          <h3>Perros</h3>
+          <p>Atención adaptada a cada raza y edad, desde cachorros hasta perros senior.</p>
+        </div>
+        <div class="serv-card reveal">
+          <svg class="serv-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 20c0-4 3-6 3-10a3 3 0 116 0c0 4 3 6 3 10"/><path d="M9 10V6M15 10V6"/></svg>
+          <h3>Gatos</h3>
+          <p>Manejo con calma pensado para reducir el estrés felino, dentro y fuera de la consulta.</p>
+        </div>
+        <div class="serv-card reveal">
+          <svg class="serv-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 3l2.4 5.3L20 9l-4 4 1 5.5L12 16l-5 2.5L8 13 4 9l5.6-.7L12 3z"/></svg>
+          <h3>Precios claros</h3>
+          <p>Presupuesto explicado antes de tratar, sin sorpresas en la factura.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- EQUIPO -->
+  <section class="page" id="equipo">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <span class="eyebrow">Quién te atiende</span>
+        <h2>Un equipo cercano, presente en cada visita.</h2>
+      </div>
+      <div class="equipo-grid">
+        <div class="persona reveal">
+          <div class="avatar">V</div>
+          <div>
+            <h3>Equipo veterinario</h3>
+            <span class="rol">Consultas y cirugía</span>
+            <p>Encargado de las consultas, diagnósticos y las intervenciones quirúrgicas del centro.</p>
+          </div>
+        </div>
+        <div class="persona reveal">
+          <div class="avatar">C</div>
+          <div>
+            <h3>Personal de clínica</h3>
+            <span class="rol">Atención y cuidados</span>
+            <p>Acompaña cada visita y ayuda a que la experiencia sea lo más tranquila posible para tu mascota.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="tile-divider thin"></div>
+
+  <!-- RESEÑAS -->
+  <section class="resenas page" id="resenas">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <span class="eyebrow">Opiniones reales</span>
+        <h2>Lo que cuentan quienes ya han venido.</h2>
+        <p>Selección de reseñas de Google, tal y como las dejaron nuestros clientes.</p>
+        <a class="btn btn-outline" style="margin-top:18px;" href="#" onclick="openReviews(event)">Ver más reseñas →</a>
+      </div>
+      <div class="res-grid">
+        <div class="res-card reveal">
+          <div class="quote-mark">“</div>
+          <p class="quote">Buen trato, profesionalidad y buenos precios.</p>
+          <div class="res-foot">
+            <div class="res-avatar">S</div>
+            <div>
+              <div class="res-name">Sandra Espino</div>
+              <div class="stars-sm">★★★★★</div>
+            </div>
+          </div>
+        </div>
+        <div class="res-card reveal">
+          <div class="quote-mark">“</div>
+          <p class="quote">Te atienden muy bien, son puntuales y muy buenos profesionales.</p>
+          <div class="res-foot">
+            <div class="res-avatar">M</div>
+            <div>
+              <div class="res-name">Ml Pm</div>
+              <div class="stars-sm">★★★★★</div>
+            </div>
+          </div>
+        </div>
+        <div class="res-card reveal">
+          <div class="quote-mark">“</div>
+          <p class="quote">Confío plenamente en los servicios de Agustín y Paula. Mis perros están muy bien cuidados, lo recomiendo al 100%.</p>
+          <div class="res-foot">
+            <div class="res-avatar">S</div>
+            <div>
+              <div class="res-name">sil moreira oliveira</div>
+              <div class="stars-sm">★★★★★</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACTO -->
+  <section class="contacto page" id="contacto">
+    <div class="wrap reveal">
+      <div class="cont-grid">
+        <div class="cont-info">
+          <span class="eyebrow">Visítanos</span>
+          <h2>Horario y ubicación</h2>
+          <div class="info-row">
+            <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M20 10c0 6-8 12-8 12S4 16 4 10a8 8 0 1116 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            <div>
+              <div class="label">Dirección</div>
+              <div class="val">Edif. Giralda Sur, C. Poeta Manuel Benítez Carrasco, 1<br>41013 Sevilla · <span class="mono">929J+76</span></div>
+            </div>
+          </div>
+          <div class="info-row">
+            <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
+            <div>
+              <div class="label">Horario de hoy</div>
+              <div class="val">Cierra a las 13:30 · abre de nuevo a las 18:00<br><span style="color:var(--ink-soft);font-size:.85rem;">Horario partido de mañana y tarde — llama para confirmar el resto de la semana.</span></div>
+            </div>
+          </div>
+          <div class="info-row">
+            <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.12.9.34 1.79.65 2.65a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.43-1.43a2 2 0 0 1 2.11-.45c.86.31 1.75.53 2.65.65A2 2 0 0 1 22 16.92z"/></svg>
+            <div>
+              <div class="label">Teléfono</div>
+              <div class="val"><a href="tel:+34954240228">954 24 02 28</a></div>
+            </div>
+          </div>
+          <div class="cont-cta">
+            <a class="btn btn-primary" href="tel:+34954240228">Llamar ahora</a>
+            <a class="btn btn-outline" href="https://www.google.com/maps?q=Edif.+Giralda+Sur,+C.+Poeta+Manuel+Ben%C3%ADtez+Carrasco+1,+41013+Sevilla" target="_blank" rel="noopener">Ver en Google Maps</a>
+          </div>
+        </div>
+        <iframe class="map-embed" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
+          src="https://www.google.com/maps?q=Edif.+Giralda+Sur,+C.+Poeta+Manuel+Ben%C3%ADtez+Carrasco+1,+41013+Sevilla&output=embed">
+        </iframe>
+      </div>
+    </div>
+  </section>
+
+  <!-- MODAL RESEÑAS -->
+  <div class="reviews-modal" id="reviewsModal" aria-hidden="true">
+    <div class="reviews-overlay" onclick="closeReviews()"></div>
+    <div class="reviews-panel" role="dialog" aria-modal="true" aria-labelledby="reviewsTitle">
+      <div class="reviews-panel-head">
+        <div>
+          <div id="reviewsTitle" class="mono" style="font-size:.7rem;text-transform:uppercase;letter-spacing:.1em;color:var(--ink-soft);">Reseñas de Google</div>
+          <h2 style="margin:2px 0 0;font-size:1.4rem;">4,5 ★ · 214 reseñas</h2>
+        </div>
+        <button class="modal-close" onclick="closeReviews()" aria-label="Cerrar reseñas">✕</button>
+      </div>
+
+      <div class="review-filters">
+        <button class="rfilter active" data-filter="all">Todas <span id="cntAll">0</span></button>
+        <button class="rfilter" data-filter="pos">Positivas <span id="cntPos">0</span></button>
+        <button class="rfilter" data-filter="neg">Críticas <span id="cntNeg">0</span></button>
+      </div>
+
+      <div class="reviews-panel-body" id="reviewsList">
+        <p id="reviewsLoading" class="mono" style="text-align:center;color:var(--ink-soft);font-size:.85rem;padding:30px 0;">Cargando reseñas…</p>
+        <p id="noResults" class="mono" style="display:none;text-align:center;color:var(--ink-soft);font-size:.85rem;padding:30px 0;">No hay reseñas en esta categoría.</p>
+
+      </div>
+      <div class="reviews-panel-foot">
+        <span style="font-size:.85rem;color:var(--ink-soft);">Selección de 113 reseñas de Google con comentario escrito (positivas y críticas), sobre un total de 214. Para ver el resto:</span>
+        <a href="https://www.google.com/maps/search/?api=1&query=Centro+Veterinario+Victoria+Edif.+Giralda+Sur+Sevilla" target="_blank" rel="noopener" class="mono" style="font-size:.82rem;color:var(--teal-dark);text-decoration:underline;">Abrir en Google Maps →</a>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<footer>
+  <div class="wrap foot-grid">
+    <div>
+      <span class="brand-name">Centro Veterinario Victoria<span>Giralda Sur, Sevilla</span></span>
+    </div>
+    <div class="mono" style="font-size:.85rem;line-height:1.9;">
+      954 24 02 28<br>
+      C. Poeta Manuel Benítez Carrasco, 1 · 41013 Sevilla<br>
+      4,5 ★ sobre 214 reseñas en Google
+    </div>
+  </div>
+  <div class="wrap foot-note">Sitio no oficial creado a partir de la ficha pública de Google Maps del centro.</div>
+</footer>
+
+<script>
+  const pageIds = ['inicio','servicios','equipo','resenas','contacto'];
+  const tabs = document.querySelectorAll('.tab');
+
+  function revealNow(container){
+    container.querySelectorAll('.reveal').forEach(el=>el.classList.add('in'));
+  }
+
+  function showPage(id, push){
+    if(!pageIds.includes(id)) id = 'inicio';
+    pageIds.forEach(pid=>{
+      const el = document.getElementById(pid);
+      if(el) el.classList.toggle('active-page', pid===id);
+    });
+    tabs.forEach(t=>t.classList.toggle('active', t.dataset.tab===id));
+    const active = document.getElementById(id);
+    if(active) revealNow(active);
+    window.scrollTo({top:0, behavior:'auto'});
+    if(push !== false){
+      // Algunos entornos (iframes con sandbox, ciertos visores) bloquean
+      // history.pushState y lanzan un error. Lo aislamos para que nunca
+      // impida el cambio de página, que ya se ha aplicado arriba.
+      try{ history.pushState(null,'','#'+id); }catch(err){ /* ignorado a propósito */ }
+    }
+  }
+
+  // Delegación de eventos en document: así funciona aunque los enlaces
+  // se toquen/generen antes o después de este script, o si algún otro
+  // script vuelve a pintar la barra de pestañas.
+  document.addEventListener('click', function(e){
+    const el = e.target.closest('[data-tab]');
+    if(el){
+      const target = el.dataset.tab;
+      if(pageIds.includes(target)){
+        e.preventDefault();
+        showPage(target);
+        return;
+      }
+    }
+    // Compatibilidad con cualquier <a href="#idDePagina"> que quedara
+    const a = e.target.closest('a[href^="#"]');
+    if(!a) return;
+    const target = a.getAttribute('href').slice(1);
+    if(pageIds.includes(target)){
+      e.preventDefault();
+      showPage(target);
+    }
+  });
+
+  window.addEventListener('popstate', ()=>{
+    let id = 'inicio';
+    try{ id = location.hash.replace('#','') || 'inicio'; }catch(err){}
+    showPage(id, false);
+  });
+
+  let startId = '';
+  try{ startId = location.hash.replace('#',''); }catch(err){}
+  showPage(pageIds.includes(startId) ? startId : 'inicio', false);
+
+  const reviewsModal = document.getElementById('reviewsModal');
+  function openReviews(e){
+    if(e) e.preventDefault();
+    reviewsModal.classList.add('open');
+    reviewsModal.setAttribute('aria-hidden','false');
+    document.body.style.overflow='hidden';
+  }
+  function closeReviews(){
+    reviewsModal.classList.remove('open');
+    reviewsModal.setAttribute('aria-hidden','true');
+    document.body.style.overflow='';
+  }
+  document.addEventListener('keydown', (e)=>{ if(e.key==='Escape') closeReviews(); });
+
+  const reviewsData = [{"name": "Mari Paz Villazán Conde", "meta": "Local Guide · 10 reseñas · Hace un mes", "text": "Era la clínica a la que acudía para las vacunas rutinarias de mi gato y siempre me había ido bien: atienden rápido y es económica. Sin embargo, otro de mis gatos se cortó y tuvo una herida importante, y el trato en la clínica fue horrible…", "sentiment": "neg", "avatar": "M"}, {"name": "sil moreira oliveira", "meta": "1 reseña · Hace 3 semanas", "text": "Confío plenamente en los servicios de Agustín y su asistenta Paula. Mis perros están muy bien cuidados. Los recomiendo al 100%.", "sentiment": "pos", "avatar": "S"}, {"name": "Nerea González López", "meta": "Local Guide · 16 reseñas · Hace un año", "text": "Centro veterinario de confianza. Castraron a nuestro chihuahua, que tenía un testículo desplazado y era una intervención compleja, y también a nuestra gatita. Dejan a los animales…", "sentiment": "pos", "avatar": "N"}, {"name": "Silva Moreira Oliveira", "meta": "Local Guide · 22 reseñas · Hace 8 meses", "text": "Me encanta el trato de Paula y Agustín. Se nota que les gusta su trabajo. Cuidan de mis mascotas con mucho cariño y siempre avisan para recordar la desparasitación o las vacunas. Lo recomiendo al 100%.", "sentiment": "pos", "avatar": "S"}, {"name": "Gorka O. E.", "meta": "Local Guide · 115 reseñas · Hace 4 años", "text": "Agustín es un veterinario excepcional, magnífico profesional y mejor cirujano si cabe. Aquí encontrarás un trato amable, personal y muy respetuoso…", "sentiment": "pos", "avatar": "G"}, {"name": "Fernando Cornejo Hernandez", "meta": "7 reseñas · Hace 11 meses", "text": "Mi gato tenía vómitos y no podía defecar. Lo llevé un miércoles y le dieron unas pastillas para cortar el vómito y lo hidrataron. Al día siguiente, tras palparle el estómago, dijeron que no le veían nada…", "sentiment": "neg", "avatar": "F"}, {"name": "Patricia Sánchez", "meta": "Local Guide · 46 reseñas · Hace un año", "text": "Tras años intentando encontrar el diagnóstico de lo que tenía mi gato, Agustín lo hizo en la primera consulta. Ojalá hubiera ido antes, porque el gato ya es mayor, pero está con la medicación correcta y estable dentro de su problema.", "sentiment": "pos", "avatar": "P"}, {"name": "Silvia Moreira Oliveira", "meta": "Local Guide · 107 reseñas · Hace un año", "text": "Adoro el trato de Agustín y sus compañeras, son súper cariñosos con los animales. Los recomiendo con los ojos cerrados. Cuidan de mi segundo perrito y siempre cobran el precio justo…", "sentiment": "pos", "avatar": "S"}, {"name": "Sustito93 Sunny", "meta": "1 reseña · Hace 11 meses", "text": "Cuando llevé a mi gato porque tenía diarrea y vómitos, solo le palpó el estómago, le inyectó antibióticos y para la diarrea…", "sentiment": "neg", "avatar": "S"}, {"name": "Cristina M", "meta": "4 reseñas · Hace un mes", "text": "Gracias a Agustín y a su equipo. Llevo años llevando a mi perrita Tina y siempre se ha portado genial. La hemos operado dos veces de tumores mamarios y la han cuidado muy bien. Además, precios inmejorables.", "sentiment": "pos", "avatar": "C"}, {"name": "Elena Muñoz", "meta": "Local Guide · 12 reseñas · Hace 3 años", "text": "Inmejorable mi experiencia con este veterinario. Llevé a mi perrita con una infección grave en el útero y desde el primer momento el equipo se volcó con ella, esforzándose al máximo…", "sentiment": "pos", "avatar": "E"}, {"name": "Mar García", "meta": "Local Guide · 19 reseñas · Hace 2 años", "text": "Llevé a mi gato porque orinaba sangre. Le tocaron la barriga y dijeron que tenía una infección de orina: 70€ con pienso y pastillas. Se le quitó, pero volvió a los pocos días y lo llevamos a otro veterinario…", "sentiment": "neg", "avatar": "M"}, {"name": "Laura González", "meta": "8 reseñas · Hace 2 años", "text": "Aquí siempre he llevado a mis mascotas, para todo. Es un hombre que cuida a los animales como si fueran suyos y los trata con cariño y dignidad, algo que se agradece…", "sentiment": "pos", "avatar": "L"}, {"name": "fatima rodriguez cabello", "meta": "2 reseñas · Hace 3 años", "text": "Lo recomiendo al 100%, sobre todo por el trato a los animales. Llevo a mi perro y a mi gato, y estoy encantada de haber encontrado un veterinario agradable. Toda mi familia acude a ellos: son grandes profesionales y nunca engañan.", "sentiment": "pos", "avatar": "F"}, {"name": "Dámaso Roa", "meta": "Local Guide · 46 reseñas · Hace 2 años", "text": "Llevé a mi perro porque se quejaba de dolor. Me atendieron en tres minutos y me dijeron que había que anestesiarlo y operarlo para sacarle una muela. Lo llevé a otro veterinario y resultó que…", "sentiment": "neg", "avatar": "D"}, {"name": "Miguel Roman Pelegrin", "meta": "Local Guide · 62 reseñas · Hace 8 años", "text": "Este centro es perfecto para traer a tus mascotas. Con gran vocación, tratan a nuestros 4 perros desde hace varios años y nunca hemos tenido problemas, todo lo contrario: el mejor trato incluso en momentos…", "sentiment": "pos", "avatar": "M"}, {"name": "Carmen Aguilar", "meta": "Local Guide · 152 reseñas · Hace 3 años", "text": "No hay palabras para lo que me están ayudando Agustín y su compañera Paula con un animal que recogí de la calle. Su nivel de empatía no lo he visto igual en otro profesional. Me han explicado toda la alimentación y el tratamiento…", "sentiment": "pos", "avatar": "C"}, {"name": "Stewart Batallas Minda", "meta": "Local Guide · 47 reseñas · Hace 9 años", "text": "Genial trato en todo momento con todos mis animales: mi perra y mis tres gatos. Los trata con mucho cariño, sin obligarte a ninguna suscripción, y cobrando un precio justo…", "sentiment": "pos", "avatar": "S"}, {"name": "Alberto & Rosario", "meta": "2 reseñas · Hace 2 años", "text": "Llevé a mi gato porque tenía diarrea. Me dijeron que era gastroenteritis y que le diera unas pastillas. Lo llevé a otro veterinario y resultó que tenía colangitis, pancreatitis y enteritis…", "sentiment": "neg", "avatar": "A"}, {"name": "Carmelo roldan camacho", "meta": "Local Guide · 46 reseñas · Hace un año", "text": "El propietario me preguntó de cuánto dinero disponía. Lamentable, en ningún momento hubo profesionalidad, y mi mascota con dolor. No lo recomiendo.", "sentiment": "neg", "avatar": "C"}, {"name": "Max", "meta": "Local Guide · 14 reseñas · Hace 3 años", "text": "Esta reseña llega 8 años tarde, pero la tengo que escribir ahora. En 2015 adopté un conejito y lo llevé a esta clínica porque era de las pocas que trataban exóticos. Pagué 60€ por…", "sentiment": "neg", "avatar": "M"}, {"name": "Rocio Borrego", "meta": "2 reseñas · Hace 2 años", "text": "Es una vergüenza que le operen sin hacerle ningún tipo de prueba. Desde entonces he ido llamando porque mi perro no comía, y cada día me decían una cosa distinta…", "sentiment": "neg", "avatar": "R"}, {"name": "Sani", "meta": "Local Guide · 30 reseñas · Hace 5 años", "text": "La primera vez que llevé a mi gato, recomendada por una amiga, fue por cercanía. Es muy amable, pero prestaba más atención a venderme el pienso que a mi gato: ni le tomó la temperatura ni le miró la boca antes de vacunarlo…", "sentiment": "neg", "avatar": "S"}, {"name": "Reyes Tabare", "meta": "Local Guide · 35 reseñas · Hace un año", "text": "Lugar muy acogedor para las mascotas. Trato con Agustín excelente, y con la chica de peluquería, genial también.", "sentiment": "pos", "avatar": "R"}, {"name": "Vane", "meta": "Local Guide · 69 reseñas · Hace 7 años", "text": "Encontraron a mi perro, lo llevaron allí y se portaron genial, tanto con él como conmigo. Le dieron de comer y agua, y cuando llegué me dijeron que no me iban a cobrar nada. Mil gracias, se nota que les gusta los animales.", "sentiment": "pos", "avatar": "V"}, {"name": "Miguel Angel Muñoz", "meta": "Local Guide · 9 reseñas · Hace 7 años", "text": "Llevé a lavar a mi perro, un husky siberiano grande, y a la media hora me llamaron para decirme que tenía mucho más pelo del previsto, que estaba costando mucho trabajo y que si quería que le cobrasen algo más…", "sentiment": "neg", "avatar": "M"}, {"name": "Mari Carmen Morales Morales", "meta": "3 reseñas · Hace 3 años", "text": "Pésimos profesionales, poca o ninguna empatía hacia los animales. Precios elevados, sin tarifa visible para el cliente, y tras mostrar mi descontento se negaron a darme el libro de hojas de reclamaciones.", "sentiment": "neg", "avatar": "M"}, {"name": "Pepa Muñoz", "meta": "10 reseñas · Hace 2 años", "text": "Satisfechos con el trato recibido y con la atención que nuestra gata recibió. Saber que tenemos tan cerca una clínica veterinaria de confianza nos tranquiliza mucho. Gracias.", "sentiment": "pos", "avatar": "P"}, {"name": "Maricarmen Navarro", "meta": "1 reseña · Hace 10 meses", "text": "Espectacular veterinario. Ama a los animales y los cuida súper bien.", "sentiment": "pos", "avatar": "M"}, {"name": "Maria Jose Martagon Hormigo", "meta": "Local Guide · 39 reseñas · Hace 5 años", "text": "Estoy encantada. Agustín, un gran profesional sensible y cuidadoso con mi perrita Nina. Ha mejorado muchísimo un problema en la piel. Gracias, Agustín.", "sentiment": "pos", "avatar": "M"}, {"name": "Maria Navarro Gandía", "meta": "Local Guide · 4 reseñas · Hace 8 años", "text": "Súper encantada con este sitio. Hoy llevé a mi perro a vacunarlo y, a pesar de que estaba bastante nervioso, las dos chicas veterinarias lo trataron muy bien. Felicito a Marta y a la otra chica especialista en nutrición.", "sentiment": "pos", "avatar": "M"}, {"name": "Ana Aisha", "meta": "Local Guide · 25 reseñas · Hace un año", "text": "Llevo a mi gatito allí desde que lo tengo y siempre lo han tratado genial ❤️", "sentiment": "pos", "avatar": "A"}, {"name": "mii", "meta": "Local Guide · 25 reseñas · Hace 2 años", "text": "Buen veterinario y gran persona. Muchísimas gracias por el trato recibido y por su nivel de implicación.", "sentiment": "pos", "avatar": "M"}, {"name": "María Molina Carabé", "meta": "Local Guide · 18 reseñas · Hace 7 años", "text": "Súper contenta con el trato recibido en esta clínica. Llevo años llevando a mi perro y seguiré llevándolo siempre, porque trabajan profesionales con un trato hacia los animales fantástico.", "sentiment": "pos", "avatar": "M"}, {"name": "Sofía Almengló", "meta": "4 reseñas · Hace 4 años", "text": "No tratan bien a los animales: a mi perro le hicieron heridas en las orejas y en más partes del cuerpo en la peluquería, y eso es no saber hacer su trabajo. Además, me cobraron 50€ por dos perros pequeños.", "sentiment": "neg", "avatar": "S"}, {"name": "Laura", "meta": "6 reseñas · Hace 2 años", "text": "No tengo más que palabras de agradecimiento. Hoy mismo tuve un susto con mi perrita y me ayudaron en el acto, de la manera más humana que uno puede imaginar. Gracias de corazón.", "sentiment": "pos", "avatar": "L"}, {"name": "Yoyca D. C", "meta": "9 reseñas · Hace 5 años", "text": "Son los mejores que he visto. Llevo más de 20 años con ellos y estoy encantada. Falleció mi perrita, cogí otro, y desde entonces me lo llevan súper contenta de tenerlo siempre.", "sentiment": "pos", "avatar": "Y"}, {"name": "María García Martín", "meta": "1 reseña · Hace 9 años", "text": "Me voy a Barcelona, y lo único que voy a echar de menos de Sevilla es este centro veterinario. Va a ser difícil encontrar otro de confianza como el de Agustín, con mi gato tan cómodo y a gusto. Gracias por todo, clínica Victoria.", "sentiment": "pos", "avatar": "M"}, {"name": "Rebeca Nuñez", "meta": "4 reseñas · Hace 2 años", "text": "Un encanto de hombre y una atención excelente. Se nota la vocación. Mil gracias por atender a mi tórtola.", "sentiment": "pos", "avatar": "R"}, {"name": "Maria Jose Martín Lobato", "meta": "Local Guide · 94 reseñas · Hace un año", "text": "Mi veterinario de toda la vida. Agustín es un profesional en su trabajo y en el trato a los animales, y como persona tiene mucha sensibilidad.", "sentiment": "pos", "avatar": "M"}, {"name": "Inma Garcia Garcia", "meta": "Local Guide · 80 reseñas · Hace 5 años", "text": "Profesionalidad, dan confianza y muy buen trato en general; te dan la seguridad de que tratan a tu mascota con gran esmero.", "sentiment": "pos", "avatar": "I"}, {"name": "Ljm jm", "meta": "2 reseñas · Hace un año", "text": "Tienen un trato muy especial a las mascotas, son encantadores y buenos.", "sentiment": "pos", "avatar": "L"}, {"name": "ana cruz", "meta": "Local Guide · 2 reseñas · Hace 3 años", "text": "Trata a las mascotas como si fuesen suyas. Buen trato y siempre da con el diagnóstico. Lo recomiendo.", "sentiment": "pos", "avatar": "A"}, {"name": "Miguel Jurado", "meta": "Local Guide · 23 reseñas · Hace 6 años", "text": "Más de 10 años llevamos siendo clientes y siempre la atención y el trato han sido inmejorables. Mucha calidad humana en momentos delicados con nuestra mascota.", "sentiment": "pos", "avatar": "M"}, {"name": "santi santiago", "meta": "Local Guide · 688 reseñas · Hace 2 años", "text": "El mejor profesional veterinario que he conocido. Agustín ama a los animales y es una bellísima persona.", "sentiment": "pos", "avatar": "S"}, {"name": "Isabel Sevilla", "meta": "Local Guide · 19 reseñas · Hace 5 años", "text": "Atentos, profesionales, empáticos y un largo etcétera. Me han salvado a mi perra. Mejor trato imposible de recibir. Gracias.", "sentiment": "pos", "avatar": "I"}, {"name": "Juanpexcd juanpexcd", "meta": "4 reseñas · Hace 3 años", "text": "Una persona increíble que trabaja por vocación e intenciones puras. Trato inmejorable y precios muy competentes.", "sentiment": "pos", "avatar": "J"}, {"name": "Moisés Sánchez Herrera", "meta": "Local Guide · 220 reseñas · Hace 3 años", "text": "Muy buen veterinario, siempre tiene alternativas para todo, buen trato en todo momento, ha abierto incluso en domingo por un favor. Muy económico, 100% recomendable.", "sentiment": "pos", "avatar": "M"}, {"name": "Cari Palacios", "meta": "Local Guide · 34 reseñas · Hace 2 años", "text": "Agustín y las chicas que están con él siempre han atendido muy bien a todos mis gatos, atentos en todo.", "sentiment": "pos", "avatar": "C"}, {"name": "Enrique Guerri", "meta": "Local Guide · 296 reseñas · Hace 7 años", "text": "Cuando la vocación se junta con el buen hacer nacen los excelentes profesionales que trabajan en la clínica, a la cabeza de todos, Agustín. Lo recomiendo 100%.", "sentiment": "pos", "avatar": "E"}, {"name": "Angel Cebrian", "meta": "Local Guide · 31 reseñas · Hace 7 años", "text": "Fue mi clínica veterinaria mientras tuve a mi perro. Nada que objetar: Agustín, buen veterinario, atento y muy ajustado en precio.", "sentiment": "pos", "avatar": "A"}, {"name": "Rocio Velludo Delgado", "meta": "Local Guide · 23 reseñas · Hace un año", "text": "Nefasto, pésimo… te mandan medicina para tu mascota sin tener un diagnóstico.", "sentiment": "neg", "avatar": "R"}, {"name": "Jesús Sierra", "meta": "2 reseñas · Hace 7 años", "text": "Lamentable: le puse a mi perro el chip hace dos años y todavía no lo han dado de alta, dándome largas continuamente. Lamentablemente tuve que cambiar de veterinario por la incompetencia.", "sentiment": "neg", "avatar": "J"}, {"name": "Fco. Javier Domínguez Fernández", "meta": "Local Guide · 207 reseñas · Hace 3 años", "text": "Buena atención y buenos profesionales, muy amables y cariñosos con los animales.", "sentiment": "pos", "avatar": "F"}, {"name": "Rosa Gues", "meta": "8 reseñas · Hace 4 años", "text": "Muy contenta con el trato a mis perritos. Agustín, un gran profesional.", "sentiment": "pos", "avatar": "R"}, {"name": "Angel Cebrian", "meta": "Local Guide · 10 reseñas · Hace 6 años", "text": "Buen veterinario, ajustado en precio, pero hay veces que él no está, por lo cual no le doy cinco estrellas.", "sentiment": "pos", "avatar": "A"}, {"name": "Tatiana Alcantara Conde", "meta": "18 reseñas · Hace 2 años", "text": "Inmejorable el trato, muy contenta. Súper recomendable.", "sentiment": "pos", "avatar": "T"}, {"name": "antonio diaz", "meta": "Local Guide · 34 reseñas · Hace 6 años", "text": "Personal muy simpático y tratan muy bien a nuestras mascotas.", "sentiment": "pos", "avatar": "A"}, {"name": "R.D M", "meta": "6 reseñas · Hace 3 años", "text": "Productos para tratamientos veterinarios bastante más baratos que en otros sitios. Te asesoran muy bien.", "sentiment": "pos", "avatar": "R"}, {"name": "Isabel Arias", "meta": "9 reseñas · Hace 4 años", "text": "Muy buena atención y muy buen veterinario, Agustín.", "sentiment": "pos", "avatar": "I"}, {"name": "juan carlos rodriguez escalona", "meta": "Local Guide · 39 reseñas · Hace 6 años", "text": "Cada vez que voy le ponen medicamentos nuevos y a mis perros les sientan mal, empeorando. No lo recomiendo.", "sentiment": "neg", "avatar": "J"}, {"name": "Mercedes GM", "meta": "Local Guide · 185 reseñas · Hace 5 años", "text": "Estamos encantados con ellos. Cuidan muy bien de nuestra gatita.", "sentiment": "pos", "avatar": "M"}, {"name": "Virginia Mayo", "meta": "Local Guide · 40 reseñas · Hace 6 años", "text": "Los dos veterinarios son cariñosos y cuidadosos con los animales; yo llevo a los míos y ni siquiera lloran con las vacunas.", "sentiment": "pos", "avatar": "V"}, {"name": "Sandra Espino", "meta": "Local Guide · 37 reseñas · Hace un año", "text": "Buen trato, profesionalidad y buenos precios.", "sentiment": "pos", "avatar": "S"}, {"name": "Rafa Borrero", "meta": "Local Guide · 35 reseñas · Hace 4 años", "text": "Buen trato con el cliente y muy amables.", "sentiment": "pos", "avatar": "R"}, {"name": "P. SUSANA COLLADO", "meta": "6 reseñas · Hace 6 años", "text": "El veterinario principal es atento y amable. Cuida bien a los perritos.", "sentiment": "pos", "avatar": "P"}, {"name": "Irene Trigo fernandez", "meta": "Local Guide · 7 reseñas · Hace 4 años", "text": "Un verdadero veterinario, que sabe cómo hacer que los animales estén muy bien.", "sentiment": "pos", "avatar": "I"}, {"name": "Nina Asenjo", "meta": "Local Guide · 119 reseñas · Hace 8 años", "text": "Un buen trato animal-dueño, muy cariñoso y cercano.", "sentiment": "pos", "avatar": "N"}, {"name": "Juan Antonio", "meta": "Local Guide · 97 reseñas · Hace 6 años", "text": "Todo perfecto, como siempre. La salud de Jara en las mejores manos.", "sentiment": "pos", "avatar": "J"}, {"name": "Sr. Viedcast", "meta": "Local Guide · 5 reseñas · Hace 3 años", "text": "Muy buen trato con los perritos.", "sentiment": "pos", "avatar": "S"}, {"name": "Ml Pm", "meta": "Local Guide · 88 reseñas · Hace 5 años", "text": "Te atienden muy bien, son puntuales y muy buenos profesionales.", "sentiment": "pos", "avatar": "M"}, {"name": "Antonio Maqui", "meta": "Local Guide · 21 reseñas · Hace 4 años", "text": "Buena atención y muy buenos los veterinarios.", "sentiment": "pos", "avatar": "A"}, {"name": "Alba Hernández", "meta": "2 reseñas · Hace 5 años", "text": "Excelente trato y magnífico trabajo con los animales.", "sentiment": "pos", "avatar": "A"}, {"name": "Jony Marony", "meta": "3 reseñas · Hace 4 años", "text": "Grandes profesionales, gran trato e implicación.", "sentiment": "pos", "avatar": "J"}, {"name": "Gabriela Stan", "meta": "Local Guide · 24 reseñas · Hace 3 años", "text": "Muy buen trato, volveré.", "sentiment": "pos", "avatar": "G"}, {"name": "Monica Veloso", "meta": "4 reseñas · Hace 5 años", "text": "Los mejores, súper agradecidas desde hace muchos años.", "sentiment": "pos", "avatar": "M"}, {"name": "crd", "meta": "Local Guide · 113 reseñas · Hace 5 años", "text": "Están tratando a mi perro de dos meses genial.", "sentiment": "pos", "avatar": "C"}, {"name": "Joaquín Donoso", "meta": "Local Guide · 146 reseñas · Hace 3 años", "text": "Primera vez que acudo. Muy atento el personal.", "sentiment": "pos", "avatar": "J"}, {"name": "elena cat", "meta": "6 reseñas · Hace 3 años", "text": "Mejor trato imposible y pedazo de profesionales.", "sentiment": "pos", "avatar": "E"}, {"name": "A HG", "meta": "Local Guide · 6 reseñas · Hace 4 años", "text": "Un gran veterinario con precios asequibles y una gran persona.", "sentiment": "pos", "avatar": "A"}, {"name": "nino sevilla", "meta": "Local Guide · 8 reseñas · Hace 6 años", "text": "Trato inmejorable a las mascotas, buenos profesionales.", "sentiment": "pos", "avatar": "N"}, {"name": "Pilar Amador Rodríguez", "meta": "3 reseñas · Hace 7 años", "text": "Muy bien, buen servicio.", "sentiment": "pos", "avatar": "P"}, {"name": "sajimes M.R", "meta": "Local Guide · 37 reseñas · Hace 8 años", "text": "Buenos profesionales y trato agradable.", "sentiment": "pos", "avatar": "S"}, {"name": "carlos casado", "meta": "Local Guide · 154 reseñas · Hace 7 meses", "text": "Magnífico profesional.", "sentiment": "pos", "avatar": "C"}, {"name": "Pedro Jiménez", "meta": "5 reseñas · Hace 3 años", "text": "Buena atención. Profesionales.", "sentiment": "pos", "avatar": "P"}, {"name": "José Pinto Mármol", "meta": "Local Guide · 35 reseñas · Hace 8 años", "text": "Buen trato y excelente asistencia.", "sentiment": "pos", "avatar": "J"}, {"name": "Manuel Texeira Monge", "meta": "Local Guide · 8 reseñas · Hace 5 años", "text": "Muy amables, siento no haberlos conocido antes.", "sentiment": "pos", "avatar": "M"}, {"name": "Isabel Salazar montaño", "meta": "Local Guide · 42 reseñas · Hace 8 años", "text": "Llevo 8 años llevando a mi mascota y estoy muy contenta.", "sentiment": "pos", "avatar": "I"}, {"name": "agustina serrano vega", "meta": "Local Guide · 44 reseñas · Hace 2 años", "text": "Excelente trato en todo.", "sentiment": "pos", "avatar": "A"}, {"name": "Nury Glez", "meta": "Local Guide · 12 reseñas · Hace 6 años", "text": "Porque es mi veterinario y es estupendo.", "sentiment": "pos", "avatar": "N"}, {"name": "rafael roales", "meta": "18 reseñas · Hace 5 años", "text": "Muy bien.", "sentiment": "pos", "avatar": "R"}, {"name": "Rafael huertas fajardo", "meta": "Local Guide · 15 reseñas · Hace 6 años", "text": "Son muy eficientes y amables en el trato.", "sentiment": "pos", "avatar": "R"}, {"name": "Francisco Jimenez Vazquez", "meta": "4 reseñas · Hace 6 años", "text": "Por la atención, gran profesional.", "sentiment": "pos", "avatar": "F"}, {"name": "Macarena Martos Daza", "meta": "1 reseña · Hace 6 años", "text": "Estupenda atención y cariñoso trato.", "sentiment": "pos", "avatar": "M"}, {"name": "ANA MARIA VACA NEGRO", "meta": "Local Guide · 17 reseñas · Hace 3 años", "text": "Magnífica persona y profesional.", "sentiment": "pos", "avatar": "A"}, {"name": "José Manuel Pérez", "meta": "Local Guide · 56 reseñas · Hace 9 años", "text": "Personal atento. Precios económicos.", "sentiment": "pos", "avatar": "J"}, {"name": "MaxCrumb", "meta": "Local Guide · 42 reseñas · Hace 6 años", "text": "Genial, muy buen veterinario.", "sentiment": "pos", "avatar": "M"}, {"name": "fcojavier GG", "meta": "Local Guide · 18 reseñas · Hace 4 años", "text": "Mi veterinario, el mejor profesional.", "sentiment": "pos", "avatar": "F"}, {"name": "Alejandro Bascon Garcia", "meta": "3 reseñas · Hace 5 años", "text": "Excelente, muy profesionales.", "sentiment": "pos", "avatar": "A"}, {"name": "Jose Perez", "meta": "13 reseñas · Hace 5 años", "text": "Cobra muy caro.", "sentiment": "neg", "avatar": "J"}, {"name": "Antonio González Santamaria", "meta": "6 reseñas · Hace 8 años", "text": "Amabilidad y buenos profesionales.", "sentiment": "pos", "avatar": "A"}, {"name": "Rubio", "meta": "Local Guide · 461 reseñas · Hace 9 años", "text": "Son buenos y cuidadosos... a veces.", "sentiment": "neg", "avatar": "R"}, {"name": "Antonio Marin Enriquez", "meta": "Local Guide · 35 reseñas · Hace 5 años", "text": "Muy bien atendido.", "sentiment": "pos", "avatar": "A"}, {"name": "Bianca Sánchez-Gutiérrez", "meta": "Local Guide · 4 reseñas · Hace 2 años", "text": "Grandes profesionales en los que confiar.", "sentiment": "pos", "avatar": "B"}, {"name": "Nani Romero", "meta": "Local Guide · 12 reseñas · Hace 9 años", "text": "Muy buen veterinario.", "sentiment": "pos", "avatar": "N"}, {"name": "Tamara Garcia", "meta": "Local Guide · 92 reseñas · Hace 5 años", "text": "Un trato inmejorable.", "sentiment": "pos", "avatar": "T"}, {"name": "Mangeles Borrego", "meta": "Local Guide · 49 reseñas · Hace 7 años", "text": "Estupendo.", "sentiment": "pos", "avatar": "M"}, {"name": "Mary Machuca", "meta": "Local Guide · 63 reseñas · Hace 5 años", "text": "Genial.", "sentiment": "pos", "avatar": "M"}, {"name": "Mari Paz rodriguez muñoz", "meta": "Local Guide · 52 reseñas · Hace 8 años", "text": "Buen veterinario.", "sentiment": "pos", "avatar": "M"}, {"name": "Alvaro Matamoros Arroyo", "meta": "6 reseñas · Hace 2 años", "text": "Profesionales.", "sentiment": "pos", "avatar": "A"}, {"name": "Criss Carpio", "meta": "7 reseñas · Hace 3 años", "text": "Veterinario de 10.", "sentiment": "pos", "avatar": "C"}, {"name": "Marco Melero", "meta": "Local Guide · 18 reseñas · Hace 5 años", "text": "Aspectos positivos: capacidad de respuesta, fiabilidad, calidad y profesionalidad.", "sentiment": "pos", "avatar": "M"}, {"name": "Juanjo Medina", "meta": "Local Guide · 107 reseñas · Hace 6 años", "text": "Aspectos negativos: fiabilidad y profesionalidad.", "sentiment": "neg", "avatar": "J"}];
+
+  const reviewsListEl = document.getElementById('reviewsList');
+  const reviewsLoading = document.getElementById('reviewsLoading');
+  const noResults = document.getElementById('noResults');
+
+  function escapeHtml(str){
+    return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  }
+
+  function renderReviews(){
+    const frag = document.createDocumentFragment();
+    reviewsData.forEach(r=>{
+      const card = document.createElement('div');
+      card.className = 'res-card';
+      card.dataset.sentiment = r.sentiment;
+      card.innerHTML = `
+        <div class="quote-mark">“</div>
+        <p class="quote">${escapeHtml(r.text)}</p>
+        <div class="res-foot"><div class="res-avatar">${escapeHtml(r.avatar)}</div><div><div class="res-name">${escapeHtml(r.name)}</div><div class="res-meta">${escapeHtml(r.meta)}</div></div></div>`;
+      frag.appendChild(card);
+    });
+    reviewsListEl.appendChild(frag);
+    if(reviewsLoading) reviewsLoading.remove();
+
+    const total = reviewsData.length;
+    const pos = reviewsData.filter(r=>r.sentiment==='pos').length;
+    const neg = reviewsData.filter(r=>r.sentiment==='neg').length;
+    document.getElementById('cntAll').textContent = total;
+    document.getElementById('cntPos').textContent = pos;
+    document.getElementById('cntNeg').textContent = neg;
+  }
+  renderReviews();
+
+  const rfilters = document.querySelectorAll('.rfilter');
+  rfilters.forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      rfilters.forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      const f = btn.dataset.filter;
+      let visibleCount = 0;
+      document.querySelectorAll('#reviewsList .res-card').forEach(card=>{
+        const show = (f==='all' || card.dataset.sentiment===f);
+        card.classList.toggle('is-hidden', !show);
+        if(show) visibleCount++;
+      });
+      noResults.style.display = visibleCount===0 ? 'block' : 'none';
+    });
+  });
+</script>
+
+</body>
+</html>
